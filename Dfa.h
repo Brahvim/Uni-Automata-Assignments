@@ -1,21 +1,9 @@
 #pragma once
 
-#define STRI(x)					#x
-#define STR(x)					STRI(x)
-#define statePtr(...)			(&stateVal(__VA_ARGS__))
-#define stateVal(p_apbet, p_name, ...)	\
-((struct State ## p_apbet) {			\
-	p_name, 							\
-	(									\
-		(struct Struct const[			\
-			dfaAlphabetTotal(p_apbet)	\
-		]) { __VA_ARGS__ }) })
-
-#define dfaAlphabetTotal(p_apbet)	\
-dfaAlphabetEnumEntry(p_apbet, TOTAL)
-
-#define dfaAlphabetEnumEntry(p_apbet, p_entry)	\
-ALPHABET_ ## p_apbet ## _ ## p_entry
+#define statePtr(p_name, ...)	(&stateVal(p_apbet, __VA_ARGS__))
+#define dfaAlphabetTotal(p_apbet)	dfaAlphabetEnumEntry(p_apbet, TOTAL)
+#define dfaAlphabetEnumEntry(p_apbet, p_entry)	ALPHABET_ ## p_apbet ## _ ## p_entry
+#define stateVal(p_name, ...)	((struct p_name) { p_name, (struct Struct*) { __VA_ARGS__ } })
 
 #define dfaAlphabetEnumBody(p_apbet, ...) {	\
 											\
@@ -24,10 +12,10 @@ ALPHABET_ ## p_apbet ## _ ## p_entry
 											\
 }
 
-#define dfaStateStructBody(p_apbet, p_struct) {		\
-													\
-	char const *name;								\
-	struct p_struct const 							\
-		transitions[dfaAlphabetTotal(p_apbet)];		\
-													\
+#define dfaStateStruct(p_apbet, p_struct)	\
+struct p_struct {							\
+											\
+	char const *name;						\
+	struct p_struct const *transitions;		\
+											\
 }

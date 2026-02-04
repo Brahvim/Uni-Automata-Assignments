@@ -3,22 +3,15 @@
 #include <string.h>
 #include <stdlib.h>
 
-enum AlphabetAb dfaAlphabetEnumBody(
-	AB,
+enum AlphabetAb dfaAlphabetEnumBody(AB,
 	dfaAlphabetEnumEntry(AB, A),
 	dfaAlphabetEnumEntry(AB, B)
 );
 
-// struct StateAb dfaStateStructBody(AB, StateAb);
-struct StateAb {
+dfaStateStruct(AB, StateAb);
 
-	char const *name;
-	struct StateAb *transitions[ALPHABET_AB_TOTAL];
+int main(int const p_argCount, char const *const p_argValues[]) {
 
-};
-
-int main(int argc, char const *argv[]) {
-	return 0;
 }
 
 /*
