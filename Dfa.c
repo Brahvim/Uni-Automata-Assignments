@@ -2,65 +2,72 @@
 #include <string.h>
 #include <stdlib.h>
 
-typedef void*(*state_t)(char const);
+struct State {
 
-void *q0(char const);
-void *q1(char const);
+	char const *name;
+	struct State(*transition)(char const);
 
-void *q0(char const p_input) {
+};
 
-	if (p_input == 'a') {
+#define STRI(x)					#x
+#define STR(x)					STRI(x)
+#define statePtr(...)			(&stateVal(__VA_ARGS__))
+#define stateVal(p_function)	((struct State) { STR(p_function), p_function })
 
-		return q1;
+struct State q0(char const input);
+struct State q1(char const input);
+
+struct State q0(char const p_input) {
+
+	switch (p_input) {
+
+		case 'a': {
+
+			return stateVal(q1);
+
+		} break;
+
+		case 'b': {
+
+			return stateVal(q0);
+
+		} break;
 
 	}
 
-	if (p_input == 'b') {
-
-		return q0;
-
-	}
-
-	return NULL;
+	return stateVal(NULL);
 
 }
 
-void *q1(char const p_input) {
-
-	if (p_input == 'a') {
-
-		return NULL;
-
-	}
-
-	if (p_input == 'b') {
-
-		return NULL;
-
-	}
-
-	return NULL;
-
+struct State q1(char const p_input) {
+	return stateVal(NULL);
 }
 
 int main() {
-
-	char *const input = "ba";
-	state_t state = q0;
-
+	char const *const input = "bba";
+	struct State state = stateVal(q0);
 	size_t const len = strlen(input);
-	int i = 0;
-	char c;
 
+	for (size_t i = 0; i < len; ++i) {
 
-	for (size_t i = 0; state && (i < len); ++i) {
+		if (!state.transition) { // ...Or `exit()` in `q1()`?
 
-		c = *(input + i);
-		state = state(c);
-		i++;
+			break;
+
+		}
+
+		struct State const *const prev = &state;
+		char const character = *(input + i);
+		state = state.transition(character);
+		printf(
+			state.transition == state.transition
+				? "Input `%c` does not transform machine state.\n"
+				: "Input `%c` transforms machine state from `%s` -> `%s`.\n",
+			state.name,
+			prev->name
+		);
 
 	}
 
 	exit(EXIT_SUCCESS);
-
 }
