@@ -1,48 +1,27 @@
+#include "Dfa.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-struct State {
+enum AlphabetAb dfaAlphabetEnumBody(
+	AB,
+	dfaAlphabetEnumEntry(AB, A),
+	dfaAlphabetEnumEntry(AB, B)
+);
+
+// struct StateAb dfaStateStructBody(AB, StateAb);
+struct StateAb {
 
 	char const *name;
-	struct State(*transition)(char const);
+	struct StateAb *transitions[ALPHABET_AB_TOTAL];
 
 };
 
-#define STRI(x)					#x
-#define STR(x)					STRI(x)
-#define statePtr(...)			(&stateVal(__VA_ARGS__))
-#define stateVal(p_function)	((struct State) { STR(p_function), p_function })
-
-struct State q0(char const input);
-struct State q1(char const input);
-
-struct State q0(char const p_input) {
-
-	switch (p_input) {
-
-		case 'a': {
-
-			return stateVal(q1);
-
-		} break;
-
-		case 'b': {
-
-			return stateVal(q0);
-
-		} break;
-
-	}
-
-	return stateVal(NULL);
-
+int main(int argc, char const *argv[]) {
+	return 0;
 }
 
-struct State q1(char const p_input) {
-	return stateVal(NULL);
-}
-
+/*
 int main() {
 	char const *const input = "bba";
 	struct State state = stateVal(q0);
@@ -71,3 +50,4 @@ int main() {
 
 	exit(EXIT_SUCCESS);
 }
+*/
