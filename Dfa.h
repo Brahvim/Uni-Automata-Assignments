@@ -1,16 +1,16 @@
 #pragma once
 
-#define statePtr(p_name, ...)	\
-(&stateVal(p_apbet, __VA_ARGS__))
+#define statePtr(p_apbet, p_name, ...)	\
+(&stateVal(p_apbet, p_name, __VA_ARGS__))
 
-#define stateVal(p_struct, ...)	\
-((struct States ## p_name) { p_name, (struct p_name*) { __VA_ARGS__ } })
+#define stateVal(p_apbet, p_name, ...)	\
+((struct States ## p_apbet) { p_name, (struct States ## p_apbet const *const) { __VA_ARGS__ } })
 
-#define stateVar(p_name, p_var, ...)	\
-struct States ## p_name p_var = stateVal(p_name, __VA_ARGS__)
+#define stateVar(p_apbet, p_var, p_name, ...)	\
+struct States ## p_apbet p_var = stateVal(p_apbet, p_name, __VA_ARGS__)
 
-#define stateVarPtr(p_name, p_var, ...)	\
-struct States ## p_name *p_var = statePtr(p_name, __VA_ARGS__)
+#define stateVarPtr(p_apbet, p_var, p_name, ...)	\
+struct States ## p_apbet *p_var = statePtr(p_apbet, p_name, __VA_ARGS__)
 
 #define dfaAlphabetTotal(p_apbet)	\
 dfaAlphabetEnumEntry(p_apbet, TOTAL)
@@ -26,10 +26,10 @@ enum Alphabets ## p_struct	{ 						\
 													\
 }
 
-#define dfaStateStruct(p_struct)		\
-struct States ## p_struct {				\
-										\
-	char const *name;					\
-	struct p_struct const *transitions;	\
-										\
+#define dfaStateStruct(p_struct)						\
+struct States ## p_struct {								\
+														\
+	char const *name;									\
+	struct States ## p_struct const *const transitions;	\
+														\
 }

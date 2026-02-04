@@ -11,9 +11,10 @@ dfaAlphabetEnumBody(
 );
 
 int main(int const p_argCount, char const *const p_argValues[]) {
-	stateVar(Ab, a,
-		stateVal(Ab, NULL)
-	);
+	struct StatesAb *q0 = calloc(1, sizeof(struct StatesAb));
+	struct StatesAb *q1 = statePtr(Ab, "q1", NULL);
+	// *q0 = stateVal(Ab, "q0", q1);
+	*q0 = ((struct StatesAb) { "q0", (struct StatesAb const *const) { q1 } });
 }
 
 /*
