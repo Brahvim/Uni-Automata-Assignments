@@ -3,15 +3,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-enum AlphabetAb dfaAlphabetEnumBody(AB,
+dfaStateStruct(Ab);
+dfaAlphabetEnumBody(
+	Ab, AB,
 	dfaAlphabetEnumEntry(AB, A),
 	dfaAlphabetEnumEntry(AB, B)
 );
 
-dfaStateStruct(AB, StateAb);
-
 int main(int const p_argCount, char const *const p_argValues[]) {
-
+	stateVar(Ab, a,
+		stateVal(Ab, NULL)
+	);
 }
 
 /*
