@@ -1,59 +1,84 @@
-#include "Dfa.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-dfaStateStruct(Ab);
-dfaAlphabetEnumBody(
-	Ab, AB,
-	dfaAlphabetEnumEntry(AB, A),
-	dfaAlphabetEnumEntry(AB, B)
-);
+#define sizearr(p_array) sizeof(p_array) / sizeof(p_array[0])
 
-int main(int const p_argCount, char const *const p_argValues[]) {
-	struct StatesAb *q0 = calloc(1, sizeof(struct StatesAb));
-	struct StatesAb *q1 = calloc(1, sizeof(struct StatesAb));
-	q0->transitions = calloc(2, sizeof(struct StatesAb));
-	*(q0->transitions + 0) = q0;
-	*(q0->transitions + 1) = q1;
-	q1->transitions = NULL;
-	q0->name = "q0";
-	q1->name = "q1";
+enum Alphabet {
 
-	enum AlphabetsAb const input[] = {
+	ABET_A,
+	ABET_B,
+	ABET_TOTAL
 
-		ALPHABET_AB_A,
-		ALPHABET_AB_B,
+};
+
+enum Alphabet* strabet(char const *const p_string, size_t p_length) {
+	enum Alphabet *const out = calloc(p_length, sizeof(enum Alphabet));
+
+	for (size_t i = 0; i < p_length; i++) {
+
+		switch (p_string[i]) {
+
+			default: {
+
+				perror("`strabet()`: Unacceptable input string!");
+				exit(EXIT_FAILURE);
+				free(out);
+				return NULL;
+
+			} break;
+
+			case 'a': out[i] = ABET_A;
+			case 'b': out[i] = ABET_B;
+
+		}
+
+	}
+
+	return out;
+}
+
+int main() {
+	size_t const dfa[][ABET_TOTAL] = {
+
+		{ 1, 2, },
+		{ 0, 0, },
 
 	};
-	size_t const len = sizearr(input);
-	struct StatesAb *state = q0;
 
-	for (size_t i = 0; i < len; ++i) {
+	size_t prev = 1;
+	size_t state = 1;
+	char const *const inputStr = "abbab";
+	size_t const inputLen = strlen(inputStr);
+	enum Alphabet const *const inputAbet = strabet(inputStr, inputLen);
 
-		if (!state->transitions) { // ...Or `exit()` in `q1()`?
+	for (size_t i = 0; i < inputLen; i++) {
+
+		if (!state) {
 
 			break;
 
 		}
 
-		struct StatesAb const *const prev = state;
-		enum AlphabetsAb symbol = *(input + i);
-		state = *(state->transitions + symbol);
+		prev = state;
+
+		enum Alphabet const abet = inputAbet[i];
+		state = dfa[state][abet];
 
 		printf(
 			state == prev
 				? "Input `%d` does not transform machine state.\n"
-				: "Input `%d` transforms machine state from `%s` -> `%s`.\n",
-			symbol,
-			prev->name,
-			state->name
+				: "Input `%d` transforms machine state from `%d` -> `%d`.\n",
+				abet,
+				prev,
+				state
 		);
 
 	}
 
-	free(q0->transitions);
-	free(q0);
-	free(q1);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+	free(inputAbet);
 	exit(EXIT_SUCCESS);
+#pragma GCC diagnostic pop
 }
